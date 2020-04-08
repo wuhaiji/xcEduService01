@@ -13,7 +13,7 @@
     <artifactId>lucence-test</artifactId>
 
     <properties>
-        <lunece.version>4.10.2</lunece.version>
+        <lunece.version>8.5.0</lunece.version>
     </properties>
     <dependencies>
 
