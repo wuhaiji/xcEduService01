@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuecheng.manage_course.dao.CategoryMapper">
+    <resultMap id="categoryMap" type="com.xuecheng.framework.domain.course.ext.CategoryNode">
+        <id property="id" column="aId"/>
+        <result property="name" column="aName"/>
+        <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.CategoryNode">
+            <id property="id" column="bId"/>
+            <result property="name" column="bName"/>
+            <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.CategoryNode">
+                <id property="id" column="cId"/>
+                <result property="name" column="cName"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+
+    <!--查询课程分类列表-->
+    <select id="findCategoryList" resultMap="categoryMap">
+        SELECT
+            a.id aId,
+            a.`name` aName,
+            b.id bId,
+            b.`name` bName,
+            c.id cId,
+            c.`name` cName
+        FROM
+            category a
+        LEFT JOIN category b ON b.parentid = a.id
+        LEFT JOIN category c ON c.parentid = b.id
+        where a.parentid = '0'
+        ORDER BY
+            a.orderby,
+            b.orderby,
+            c.orderby
+    </select>
+</mapper>

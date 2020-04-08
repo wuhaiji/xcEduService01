@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuecheng.manage_course.dao.TeachPlanMapper">
+    <resultMap id="teachPlanMap" type="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+        <id property="id" column="oneId"/>
+        <result property="pname" column="oneName"/>
+        <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+            <id property="id" column="twoId"/>
+            <result property="pname" column="twoName"/>
+            <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+                <id property="id" column="threeId"/>
+                <result property="pname" column="threeName"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="findTeachPlanList" parameterType="java.lang.String"
+            resultMap="teachPlanMap">
+        SELECT
+        a.id oneId,
+        a.pname oneName,
+        b.id twoId,
+        b.pname twoName,
+        c.id threeId,
+        c.pname threeName
+        FROM
+        teachplan a
+        LEFT JOIN teachplan b ON b.parentid = a.id
+        LEFT JOIN teachplan c ON c.parentid = b.id
+        WHERE
+        a.parentid = '0'
+        <if test="_parameter!=null and _parameter!='' ">
+            and a.courseid = #{courseId}
+        </if>
+        ORDER BY
+        a.orderby,
+        b.orderby,
+        c.orderby
+    </select>
+
+</mapper>
